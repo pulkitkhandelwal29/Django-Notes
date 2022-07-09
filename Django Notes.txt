@@ -1,0 +1,270 @@
+1.Installing django
+pip install django
+
+2.Creating a project
+django-admin startproject [project_name]
+
+>It will create a folder and in it there will be 4 files, and also there will be manage.py file as well
+
+3.Starting web server
+>"Manage.py" helps to run our server and collects all the essential files to start running
+python manage.py runserver
+
+4.Changing name to any other name manually so that we dont get confused between external folder and internal folder
+5.When the debug is set to True, we get the information about the errors and other things. In production, we should set it to False
+
+6.Viewing different files in Django Application
+>urls.py		//it tells where the particular request should go and which html file to display when request is there
+>settings.py	//all the settings of db,authentication is there in this file
+>init.python	//advanced topic
+>wsgi.py		//used when hosting of website is there and how public can access it
+
+7.To create html files ,we will create a folder named "templates" under the main project folder and create different html files we need, also we need to tell django to look into the templates. To do that, we will edit "settings.py" and then go to "templates" section inside the file and in the brackets of dirs type 'templates' (to provide a location)
+
+8.Now flow of information is that firstly it will go to "urls.py", then go to particular python file like "views.py" and then from views.py, we will go to particular rendered html.(like home.html)
+
+9.In .gitignore, u can type the file names and git will ignore it(Django sample gitignore file on internet)
+
+10.Django project is a whole website, and in that there are apps like blog etc. , that can be used directly onto another website
+
+11. To create an app, python manage.py startapp [appname]
+> when we make app, we need to register it in settings.py file under Installed App section
+>Then in app, we need to code in models.py file to describe what all the app needs
+>To bring the app model in the admin section, register it in admin.py file of the app
+>After registering everything, make the migrations(python manage.py makemigrations) and migrate the file (python manage.py migrate)
+
+12. In apps section, there is a concept of models. It helps to get connected with database. 
+eg--If we want to add a new project job that we have done now, first way is to just manually edit the HTML and add the code, apply the image but this way will need to change again and again HTML code. 
+Another way is to just create a job model where you can make changes to database and then it will automatically reflect in your website.
+(in apps like blog, models.py)
+
+13.Editing models.py in the particular apps section based on requirement of task (usually we have 1 model for 1 app)
+
+14.migrate is the process where the database is informed that we have model and it should be created in database
+"python manage.py migrate"
+In short migrate is that we are setting up the database
+
+For the user built models (like of blog and jobs), we need to first make them ready for migration. "python manage.py makemigration"
+Before making migration of user built models, we have to tell django that you have some model that u need to migrate.
+For that go to settings.py file of main project, go to "installed_apps" section and write the model path -- [appname,apps file,class name] (eg--'jobs.apps.JobsConfig') or directly the app name
+
+We will also tell django where we will store the media files, go to last section of settings.py and 
+MEDIA_ROOT = BASE_DIR / 'media/' (creating a media folder, name can be given anything)
+MEDIA_URL = '/media/'
+
+and then do "python manage.py makemigration" and django will get to know there is some migration of job need to be done.
+and then "python manage.py migrate" will tell database to make required changes
+
+15.Admin Page ---(Most important part--> all the models og different jobs will be there for interactivity)
+To access the "admin" section of webpage, we need to first create the superuser
+"python manage.py createsuperuser"    and then provde the name, email,password (like portfolio,portfolio@abc.com, django123)
+
+Every app has its admin.py file.
+To display a model to appear on admin page, register it in the admin.py file of the model
+Admin page helps to directly interact with the database, without even touching the code 
+
+16.Working on Postgres (install psycopg2 library)
+>Install it from the official website
+>Create a database like "portfoliodb"
+
+Provide the different parameters in the "Database" section of settings.py file of project
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'portfoliodb',
+        'USER':'postgres',
+        'PASSWORD':'toor',
+        'HOST':'localhost',
+        'PORT':'5432'
+
+Now we are telling Django, that any thing after this will be stored in postgresql db
+Anything we did earlier in sqlite3 will be in that db only, now we have changed the database we will have to do from start
+like creating superuser, jobs etc.
+It is just because in your database, everything lies like your job models,user authentication etc.
+"python manage.py migrate"
+"python manage.py createsuperuser"
+
+17.Creating webpage using models only 
+>for each model, we can create templates folder and then just create the html pages there for each app
+
+
+
+
+**Project**
+>Create a virutal environment
+>create a django project
+>Rename the main folder project according to yours compatability
+>Make changes in your settings.py like Setting the database(for this you need to create database in postgresql)
+>Create gitignore file in the main folder of your project
+>Migrate the changes using python manage.py migrate
+>Check if the server is running
+>Now to work on project, identify the apps and add accordingly (python manage.py startapp products)
+>Create a homepage(for that u need to make changes in urls.py file of main project, then the app modification of views.py and create a templates folder for each app)
+>Also you need to link the app to the main project(will be done by adding record in "installed apps" section of settings.py
+>Its very hard to create navbar for each html file, instead we will create a base.html file that contains the navbar and every body comes in this html only.(create templates folder in main project and under it a base.html file) and file which we want to display will be extended to base.html (like home.html). We will also need to add the path of base.html in "Templates" section of settings.py so that django knows that it should display this file only
+>Save the logo in static folder as u want. To run static files we need to set STATIC_ROOT and STATIC_URL in settings.py file and then collect all static files(python manage.py collectstatic) and also we need to {% load static %} in the html page where we need to load static files.
+>Now working on Sign Up and Login authentication
+Route the accounts/ url to accounts.urls where there are three different option likes signup,login,logout
+From there go to views.py and create function for each different function and render the html page respectively
+Now create the html page for signup
+>for sign up, we need to work under the function of signup under views.py of accounts. We need to check for the password match, then is the user exists before and then if not add the user.
+>To make login functionality, just check the username and password using auth that is imported from django. It will do it and u will able to login
+>Create the superuser by python manage.py createsuperuser (like producthunt,producthunt@abc.com,django123)
+All the users will be displayed under Users of Django Administration
+>When we are running our website on our own, then it is good to add information from admin panel, but if we are allowing different users to add information, then we have to create a separate page for them.
+>Now we will create a form for taking information and in the views.py under create function, fetch all information from the website and add it to the database
+>Now adding details to each and every product by detail function under views.py (get_object_or_404)
+
+
+
+
+
+#Workflow of project
+1. Whenever user search for url, the request comes to the urls.py. 
+2. Views.py (Defined functions) 
+3.Settings.py (for Templates directory entry)
+4.Writing code in HTML file
+5.For app thing, create app
+6. Make changes in Models.py file
+7.Make changes in admin.py file of different apps to appear them on admin page
+8.Entry of postgresql database in settings.py file
+9.Now work on your html files to look better
+10.Access all the app data (like jobs) from database and rendering it in html file.
+
+
+#Working
+Whenever user search for url, the request comes to the urls.py. Then in that it will see the path of the request.It will find out that request is going to some .py file (here views.py) and function is there. It will see some rendering of the template is there, and that particular template will be rendered.
+
+People go to the url's. In the urls.py file, we see that if there is any path, we will go to the respective file it is attached to.
+For HTML pages, we need to create "Templates" folder, and create all HTML files in it.But before that we need to Django where to look for the templates folder. For that you need to make entry in "settings.py" file under "templates->dirs" option.
+
+There is django project and in it there are django apps (like Blog).
+To start working on apps, edit the models.py file of apps (like blog) and provide the fields that it requires
+Then Add the Blog App to the settings (in the settings.py, under INSTALLED_APPS section)
+Create a migration(python manage.py makemigrations)
+Migrate(python manage.py migrate)
+Add to the admin.py file of the app to appear it on admin page
+
+If we have different views for different apps, create a new folder of "templates->[appname]" inside that app and create html files there only.
+
+
+
+
+views.py file contain all the function that needs to be executed
+
+
+**HTML files**
+>Create a html file with good design using bootstrap
+>Now access all the apps data from database to appear it on html file according to your requirement
+
+
+
+We can also include apps urls.py file in the main urls.py file and then if the request comes, first it will come to urls.py file and then move to app specific urls.py file.
+
+#Context Processors (for dropdown menu) 
+> when using context processors function, we need to register it under templates in settings.py file
+> After then it becomes available for every template file
+
+
+
+
+
+
+
+**Loading Static Files**
+> Creating entry in "settings.py" of STATIC_ROOT,STATIC_URL,STATICFILES_DIRS
+>python manage.py collectstatic
+
+To load staticfiles in html
+{% load static %}			// in the starting of html only
+
+After it load any static file (like image)
+<img src = "{% static 'abc.jpg' %}>
+
+
+
+
+
+Dont forget to add Apps created in "settings.py" file. (App name is given in respective apps.py file of app created--clss name)
+
+Extending base.html file
+{% extends base.html %}
+
+{% block content %}
+home
+{% endblock %}
+
+
+
+
+#Authentication
+1.Create Signup and login.html
+2.Prepare functions of them in views.py file of the app
+3.In the html, check if the user is authenticated, then display the logout option
+
+
+
+
+## Django Deployment
+pythonanywhere.com
+
+
+
+
+##Steps
+Project Created
+App created
+Entry into settings.py file for app
+Creating HTML file inside the templates directory (in main project or apps (if there is))
+Importing views.py in urls.py file of main project
+Calling the function from views.py file for the path (they need)
+Now render the template (html file) from views.py file 
+
+Apps model file created
+If u want your model to appear on admin page, put the entry of the model in admin.py of the app
+
+
+
+#Deploying on python anywhere
+
+upload your project on github
+clone your project on python anywhere 
+create a virtual env (mkvirtualenv --python=/usr/bin/python3.8 todoenv)
+install all the packages required using requirements.txt
+
+Go to "Web" in python anyhwere and create a new web app
+It will create a new web app
+
+Now go to option of "virtualenv" and put the name of virtualenv created
+Under "Code" put the "source code" path and "Working directory path" as the full project path
+
+Now click on wsgi file under "wsgi configuration file" and edit it
+Delete everything except Django Code, and uncomment it and delete the first two lines just stating information
+For "path" variable-- again past the path of project
+For .settings file -- write the folder that contains .settings py file (inside folder name)
+and save the changes and "reload the page"
+
+We will get an error of "Allowed Host"
+
+Now to put this entry in settings.py file, go to source code and open directory and go to settings.py file and under "Allowed Hosts", paste the website name (pulkitkhandelwal29.pythonanywhere.com)
+and save it and again "reload pulkitkhandelwal29.pythonanywhere.com" and changes will be reflected to the website
+
+Now to run our static files
+Go to "static files" in web and put the entry "/static/" as URL
+and put the path as "/home/pulkitkhandelwal29/Todo-List-Project/static" (where the static folder is)
+
+If you have media folder (its the same above way) 
+(/media/) and put the path as "/home/pulkitkhandelwal29/Todo-List-Project/media"
+
+
+"Force HTTPS" should be enabled in "Web" option
+
+and Done (website is deployed)
+
+
+Ignore the files that are not needed using .gitignore
+pycache files, .pyc file etc.
+
+#ends
+
+
+
